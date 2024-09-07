@@ -48,8 +48,13 @@ const { promisify } = require("node:util");
     return linkElement.getAttribute('href');
   });
 
-  const result = {
+  /*const result = {
     image: imageData,
+    downloadLink: downloadLink
+  };*/
+
+  const result = {
+    imageData,
     downloadLink: downloadLink
   };
 
