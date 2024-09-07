@@ -1,6 +1,14 @@
 const puppeteer = require('puppeteer');
+const { exec } = require("node:child_process");
+const { promisify } = require("node:util");
 
 (async () => {
+  const { stdout: chromiumPath } = await promisify(exec)("which chromium");
+  
+  if (!chromiumPath) {
+    throw new Error("Chromium غير مثبت.");
+  }
+
   const browser = await puppeteer.launch({
     headless: true,
     args: [
@@ -9,6 +17,7 @@ const puppeteer = require('puppeteer');
       "--disable-web-security",
       "--disable-features=IsolateOrigins,site-per-process"
     ],
+    executablePath: chromiumPath.trim(),
     defaultViewport: { width: 430, height: 932 }
   });
 
