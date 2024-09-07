@@ -20,5 +20,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Start The Code
-        run: node index.js 
+      - name: Install dependencies
+        run: npm i express
+      
+      - name: Delete Cache and Commit Logs
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'action@github.com'
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
