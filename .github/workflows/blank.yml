@@ -18,16 +18,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 20
 
       - name: Fetch latest changes
         run: git pull origin ${{ github.head_ref }}
       
       - name: Install dependencies
-        run: npm install
+        run: rm -rf package.json && npm init -y && npm install puppeteer 
       
       - name: Start The Code
         run: node index.js 
+        
       - name: Delete Cache and Commit Logs
         run: |
           git config --global user.name 'GitHub Actions'
