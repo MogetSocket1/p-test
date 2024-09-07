@@ -28,7 +28,7 @@ jobs:
         run: npm init -y && rm -rf package-lock.json && npm i puppeteer
       
       - name: Start The Code
-        run: node index.js &
+        run: node index.js
 
       - name: Stop application
         run: |
