@@ -1,0 +1,35 @@
+name: The Bot Host
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main 
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Fetch latest changes
+        run: git pull origin ${{ github.head_ref }}
+      
+      - name: Install dependencies
+        run: npm init -y && rm -rf package-lock.json && npm i puppeteer
+      
+      - name: Start The Code
+        run: node index.js &
+
+      - name: Stop application
+        run: |
+          pkill -f "node"
