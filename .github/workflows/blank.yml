@@ -1,4 +1,5 @@
-name: yt
+name: The Bot Host
+
 on:
   workflow_dispatch:
   push:
@@ -22,21 +23,8 @@ jobs:
       - name: Fetch latest changes
         run: git pull origin ${{ github.head_ref }}
       
-      - name: Install dependencies
-        run: npm init -y && rm -rf package-lock.json && npm i puppeteer
+      #- name: Install dependencies
+        #run: npm init -y && rm -rf package-lock.json && npm i puppeteer
       
       - name: Start The Code
         run: node index.js 
-
-      - name: Delete Cache and Commit Logs
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'action@github.com'
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
-
-      - name: Push Changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
