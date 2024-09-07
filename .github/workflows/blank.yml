@@ -23,8 +23,8 @@ jobs:
       - name: Fetch latest changes
         run: git pull origin ${{ github.head_ref }}
       
-      #- name: Install dependencies
-        #run: npm init -y && rm -rf package-lock.json && npm i puppeteer
+      - name: Install dependencies
+        run: npm install
       
       - name: Start The Code
         run: node index.js 
