@@ -20,8 +20,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm i express
+      - name: Download ngrok
+        run: wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.zip -O ngrok.zip
+      - name: Extract ngrok
+        run: unzip ngrok.zip
+      - name: Make ngrok executable
+        run: chmod +x ngrok
       
       - name: Delete Cache and Commit Logs
         run: |
