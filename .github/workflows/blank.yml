@@ -1,4 +1,4 @@
-name: The Bot Host
+name: api
 
 on:
   workflow_dispatch:
@@ -8,6 +8,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+     - cron: "*/30 * * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,22 +22,35 @@ jobs:
         with:
           node-version: 20
 
-      - name: Download ngrok
-        run: wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.zip -O ngrok.zip
-      - name: Extract ngrok
-        run: unzip ngrok.zip
-      - name: Make ngrok executable
-        run: chmod +x ngrok
-      
-      - name: Delete Cache and Commit Logs
+      - name: Configure Ngrok
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'action@github.com'
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
+          ./ngrok authtoken 2lLwH55Szr1ALu0JNVfhSLdn46P_2rfzNyqMU1AZdeXGHVYLu
 
-      - name: Push Changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+      - name: Start Ngrok Tunnel
+        run: ./ngrok tunnel --label edge=edghts_2lReKuel1jJhvqboHbEp33hjPB8 http://localhost:3000 &
+
+      - name: Start The Code
+        run: node index.js &
+
+      - name: Keep Alive
+        id: check_runs
+        run: |
+          echo "has_new_run=false" >> $GITHUB_OUTPUT
+          while true; do
+            sleep 1
+            latest_run=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs?per_page=1&status=queued&status=in_progress" | \
+              jq -r '.workflow_runs[0].id')
+            if [[ $latest_run != ${{ github.run_id }} ]]; then
+              echo "has_new_run=true" >> $GITHUB_OUTPUT
+              break
+            fi
+          done
+
+      - name: Stop Workflow
+        if: steps.check_runs.outputs.has_new_run == 'true'
+        run: exit 0
+
+      - name: Keep Alive
+        if: steps.check_runs.outputs.has_new_run == 'false'
+        run: sleep 60
