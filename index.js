@@ -36,8 +36,8 @@ const { promisify } = require("node:util");
   const imageData = await page.evaluate(() => {
     const imageElement = document.querySelector('div.download-success-image img');
     return {
-      src: imageElement.getAttribute('src'),
-      alt: imageElement.getAttribute('alt')
+      icon: imageElement.getAttribute('src'),
+      video_name: imageElement.getAttribute('alt')
     };
   });
 
