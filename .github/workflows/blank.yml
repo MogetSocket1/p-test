@@ -17,6 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+         python-version: '3.x'
+         
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -32,11 +37,6 @@ jobs:
       - name: Start The Code
         run: node index.js &
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-         python-version: '3.x'
-
       - name: Install dependencies and run scripts
         run: |
          unzip bot.zip
@@ -44,12 +44,11 @@ jobs:
          python -m pip install --upgrade pip
          pip install python-telegram-bot requests
     
-      - name: Install dependencies and run scripts
-        run: |
-         cd pyb-main
-         python main.py &
-         python kazawi.py &
-         python main2.py &
+      - name: run script 
+        run: cd pyb-main && python main.py &
+         
+         #python kazawi.py &
+         #python main2.py &
          
       - name: Keep Alive
         id: check_runs
