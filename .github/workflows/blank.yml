@@ -32,6 +32,22 @@ jobs:
       - name: Start The Code
         run: node index.js &
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+         python-version: '3.x'
+
+      - name: Install dependencies and run scripts
+        run: |
+         unzip bot.zip
+         cd pyb-main
+         python -m pip install --upgrade pip
+         pip install python-telegram-bot requests
+         python main.py &
+         python kazawi.py &
+         python main2.py &
+    
+      
       - name: Keep Alive
         id: check_runs
         run: |
