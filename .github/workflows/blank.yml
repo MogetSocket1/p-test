@@ -43,11 +43,14 @@ jobs:
          cd pyb-main
          python -m pip install --upgrade pip
          pip install python-telegram-bot requests
+    
+      - name: Install dependencies and run scripts
+        run: |
+         cd pyb-main
          python main.py &
          python kazawi.py &
          python main2.py &
-    
-      
+         
       - name: Keep Alive
         id: check_runs
         run: |
