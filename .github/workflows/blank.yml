@@ -49,9 +49,6 @@ jobs:
          
          #python kazawi.py &
          #python kazawi.py &
-         
-      - name: run script 
-        run: cd pyb-main && python kazawi.py &
       
       - name: run script 
         run: cd pyb-main && python main2.py &
